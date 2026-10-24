@@ -17,7 +17,7 @@ const crumbs: Record<string, string> = { "/": "Dashboard", "/feed": "Priority Fe
 
 export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const [ws, setWs] = useState(workspaces[0]);
+  const [ws, setWs] = useState(workspaces[0]!);
   const crumb = crumbs[path] ?? (path.startsWith("/items") ? "Item details" : "");
 
   return (
