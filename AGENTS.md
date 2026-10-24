@@ -16,3 +16,4 @@
 - The app shell (sidebar + top bar) lives in `src/components/workradar/AppShell.tsx` and wraps `<Outlet />` in `__root.tsx`; routing uses TanStack Router (fixed by the stack).
 - Item triage state (assignee, done, snooze) lives in `src/lib/store.tsx` (React context, persisted to localStorage, loaded in useEffect); all routes read items via `useWorkStore()` so changes show everywhere.
 - Per-item detail content (evidence, timeline, related, metadata, exposure) lives in `src/data/itemDetails.ts`, keyed by item id; AI text and source observations are labelled separately in the UI.
+- Search scoring/highlighting is pure logic in `src/lib/search.ts` (tested); extra non-priority indexed records live in `src/data/searchRecords.ts`.

@@ -38,7 +38,7 @@ interface Result extends Searchable {
 }
 
 function Hl({ text, q }: { text: string; q: string }) {
-  return <>{highlightParts(text, q).map((p, i) => (p.match ? <mark key={i} className="rounded-sm bg-warning-soft px-0.5 text-foreground">{p.text}</mark> : <span key={i}>{p.text}</span>))}</>;
+  return <>{highlightParts(text, q).map((p, i) => (p.match ? <mark key={i} className="rounded-sm bg-warning-soft text-foreground">{p.text}</mark> : <span key={i}>{p.text}</span>))}</>;
 }
 
 function SearchPage() {
