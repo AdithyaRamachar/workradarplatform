@@ -182,7 +182,7 @@ function SearchPage() {
           <Panel>
             {results.length ? results.map((r) => <ResultRow key={r.id} r={r} q={term} />) : (
               <NoSearchResultsState
-                query={source !== "all" ? `${term}” in “${sourceLabels[source]}` : term}
+                query={term}
                 onClearSearch={clearSearch}
                 {...(source !== "all" ? { onClearFilters: () => setSource("all") } : {})}
               />

@@ -17,3 +17,4 @@
 - Item triage state (assignee, done, snooze) lives in `src/lib/store.tsx` (React context, persisted to localStorage, loaded in useEffect); all routes read items via `useWorkStore()` so changes show everywhere.
 - Per-item detail content (evidence, timeline, related, metadata, exposure) lives in `src/data/itemDetails.ts`, keyed by item id; AI text and source observations are labelled separately in the UI.
 - Search scoring/highlighting is pure logic in `src/lib/search.ts` (tested); extra non-priority indexed records live in `src/data/searchRecords.ts`.
+- Reusable empty/error/recovery states live in `src/components/workradar/states.tsx`; simulated failures carry a SimulatedTag and retries are local timers only.
