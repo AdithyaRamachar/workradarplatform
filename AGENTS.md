@@ -11,3 +11,6 @@
 
 - WorkRadar is a frontend-only prototype: all data comes from `src/data/mock.ts` with typed models in `src/lib/types.ts`; no backend, auth, or env vars (per brief).
 - App shell (sidebar + top bar) lives in `src/components/workradar/AppShell.tsx` and wraps `<Outlet />` in `__root.tsx`; routing uses TanStack Router (fixed by the stack).
+
+- WorkRadar is a frontend-only prototype: data comes from `src/data/mock.ts` with typed models in `src/lib/types.ts`; no backend, auth, or env vars (per brief).
+- The app shell (sidebar + top bar) lives in `src/components/workradar/AppShell.tsx` and wraps `<Outlet />` in `__root.tsx`; routing uses TanStack Router (fixed by the stack).
