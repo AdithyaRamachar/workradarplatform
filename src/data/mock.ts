@@ -4,29 +4,29 @@ export const workspaces: Workspace[] = [
   { id: "platform", name: "Platform Engineering" },
   { id: "mobile", name: "Mobile Apps" },
   { id: "data", name: "Data Infrastructure" },
-];
+] as const satisfies readonly Person[];
 
 export const currentUser: Person = { id: "u0", name: "Priya Nair", initials: "PN", role: "Engineering Manager" };
 
-const people: Person[] = [
+const people = [
   { id: "u1", name: "Marcus Lee", initials: "ML", role: "Senior Engineer" },
   { id: "u2", name: "Sofia Alvarez", initials: "SA", role: "Staff Engineer" },
   { id: "u3", name: "Dev Patel", initials: "DP", role: "Engineer II" },
-];
+] as const satisfies readonly Person[];
 
 export const sources: Source[] = [
   { id: "github", name: "GitHub", status: "connected" },
   { id: "jira", name: "Jira", status: "syncing" },
   { id: "slack", name: "Slack", status: "connected" },
   { id: "pagerduty", name: "PagerDuty", status: "error" },
-];
+] as const satisfies readonly Person[];
 
 export const metrics: Metric[] = [
   { label: "Critical items", value: "3", delta: "+1 since yesterday", severity: "critical" },
   { label: "Blocked PRs", value: "7", delta: "-2 this week", severity: "warning" },
   { label: "Sprint progress", value: "68%", delta: "On track", severity: "success" },
   { label: "Open incidents", value: "1", delta: "P2 · 3h open", severity: "info" },
-];
+] as const satisfies readonly Person[];
 
 export const workItems: WorkItem[] = [
   {
@@ -89,7 +89,7 @@ export const workItems: WorkItem[] = [
     tags: ["release"],
     aiInsight: "Good candidate for a team shout-out in Friday's update.",
   },
-];
+] as const satisfies readonly Person[];
 
 export const getItem = (id: string) => workItems.find((i) => i.id === id);
 export const lastUpdated = "2 min ago";
