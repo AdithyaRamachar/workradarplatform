@@ -13,7 +13,7 @@ const nav = [
   { to: "/states", label: "States", icon: ShieldAlert },
 ] as const;
 
-const crumbs: Record<string, string> = { "/": "Dashboard", "/feed": "Priority Feed", "/search": "Search", "/states": "Empty & Error States" };
+const crumbs: Record<string, string> = { "/": "Dashboard", "/feed": "Priority Feed", "/search": "Search", "/states": "System States" };
 
 export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });

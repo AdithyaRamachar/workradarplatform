@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Clock, ExternalLink, History, Search as SearchIcon, SearchX, X } from "lucide-react";
+import { ArrowRight, Clock, ExternalLink, History, Search as SearchIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { useWorkStore } from "@/lib/store";
 import { sourceRecords } from "@/data/searchRecords";
 import { highlightParts, scoreMatch, sourceLabels, type Searchable } from "@/lib/search";
 import type { Severity, SourceKind } from "@/lib/types";
 import { Avatar, EmptyState, PageHeader, Panel, SeverityBadge } from "@/components/workradar/primitives";
+import { NoSearchResultsState } from "@/components/workradar/states";
 import { sourceIcon } from "@/components/workradar/PriorityCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -180,16 +181,10 @@ function SearchPage() {
           </div>
           <Panel>
             {results.length ? results.map((r) => <ResultRow key={r.id} r={r} q={term} />) : (
-              <EmptyState
-                icon={SearchX}
-                title="No results found"
-                description={`Nothing matched “${term}”${source !== "all" ? ` in ${sourceLabels[source]}` : ""}. Try a broader term or another source.`}
-                action={
-                  <div className="flex gap-2">
-                    {source !== "all" && <Button variant="outline" onClick={() => setSource("all")}>Clear filters</Button>}
-                    <Button variant="outline" onClick={clearSearch}>Clear search</Button>
-                  </div>
-                }
+              <NoSearchResultsState
+                query={term}
+                onClearSearch={clearSearch}
+                {...(source !== "all" ? { onClearFilters: () => setSource("all") } : {})}
               />
             )}
           </Panel>

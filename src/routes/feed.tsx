@@ -5,6 +5,7 @@ import { useWorkStore, type ResolvedItem } from "@/lib/store";
 import { team } from "@/data/mock";
 import type { SourceKind, Urgency } from "@/lib/types";
 import { EmptyState, PageHeader, Panel } from "@/components/workradar/primitives";
+import { AllCaughtUpState } from "@/components/workradar/states";
 import { PriorityCard, sourceName } from "@/components/workradar/PriorityCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -139,6 +140,8 @@ function Feed() {
       <Panel>
         {shown.length ? (
           shown.map((i) => <PriorityCard key={i.id} item={i} />)
+        ) : view === "active" && !chips.length ? (
+          <AllCaughtUpState />
         ) : view === "snoozed" && !chips.length ? (
           <EmptyState icon={BellOff} title="Nothing snoozed" description="Snoozed items appear here until they resurface." />
         ) : (

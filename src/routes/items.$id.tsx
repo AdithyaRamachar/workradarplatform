@@ -1,10 +1,11 @@
 import { createFileRoute, Link, notFound, useRouter, type ErrorComponentProps } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, CloudOff, Eye, FileQuestion, Radar, Sparkles, Undo2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CheckCircle2, ChevronRight, CloudOff, Eye, Radar, Sparkles, Undo2 } from "lucide-react";
 import { getItem } from "@/data/mock";
 import { itemDetails } from "@/data/itemDetails";
 import { Avatar, EmptyState, Panel, SeverityBadge, severityStyles } from "@/components/workradar/primitives";
 import { AssignPicker, DoneButton, Feedback, SnoozeMenu, sourceIcon, sourceName } from "@/components/workradar/PriorityCard";
 import { Button } from "@/components/ui/button";
+import { ItemUnavailableState } from "@/components/workradar/states";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fmtTime, useWorkStore, type ResolvedItem } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -27,12 +28,7 @@ export const Route = createFileRoute("/items/$id")({
   pendingComponent: DetailSkeleton,
   notFoundComponent: () => {
     const { id } = Route.useParams();
-    return (
-      <Panel>
-        <EmptyState icon={FileQuestion} title="Item not found" description={`No work item matches “${id}”. It may have been removed from the mock data set.`}
-          action={<Button asChild variant="outline"><Link to="/feed">Back to Priority Feed</Link></Button>} />
-      </Panel>
-    );
+    return <Panel><ItemUnavailableState id={id} /></Panel>;
   },
   errorComponent: DetailError,
   component: ItemDetails,
