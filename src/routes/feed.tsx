@@ -114,7 +114,7 @@ function Feed() {
         <div className="ml-auto">
           <Select value={sort} onValueChange={(v) => setSort(v as Sort)}>
             <SelectTrigger className="h-9 w-auto bg-surface text-sm" aria-label="Sort by">
-              <span className="text-muted-foreground">Sort:</span>
+              <span className="mr-1 text-muted-foreground">Sort:</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
