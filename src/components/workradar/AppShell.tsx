@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Bell, ChevronDown, LayoutDashboard, ListOrdered, Radar, RefreshCw, Search, ShieldAlert } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { currentUser, lastUpdated, sources, workspaces } from "@/data/mock";
@@ -18,6 +18,7 @@ const crumbs: Record<string, string> = { "/": "Dashboard", "/feed": "Priority Fe
 export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [ws, setWs] = useState(workspaces[0]!);
+  const navigate = useNavigate();
   const crumb = crumbs[path] ?? (path.startsWith("/items") ? "Item details" : "");
 
   return (
@@ -101,6 +102,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="relative ml-auto w-full max-w-sm">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
+              aria-label="Global search"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const v = e.currentTarget.value.trim();
+                  navigate({ to: "/search", search: v ? { q: v } : {} });
+                  e.currentTarget.value = "";
+                }
+              }}
               placeholder="Search PRs, tickets, threads…"
               className="h-9 w-full rounded-md border bg-muted pl-9 pr-3 text-sm outline-none focus:border-primary focus:bg-surface"
             />
