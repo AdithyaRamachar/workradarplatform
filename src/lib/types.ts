@@ -20,6 +20,9 @@ export interface Person {
 export interface WorkItem {
   id: string;
   rank: number;
+  latest: string;
+  waitingHours: number;
+  updatedMinutes: number;
   title: string;
   summary: string;
   rationale: string;
