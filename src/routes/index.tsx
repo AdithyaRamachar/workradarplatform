@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, History, RefreshCw, Sparkles, UserX } from "lucide-react";
-import { blockedPeople, briefs, currentUser, metrics, recentActivity, sources, workItems } from "@/data/mock";
+import { blockedPeople, briefs, currentUser, metrics, recentActivity, sources } from "@/data/mock";
 import { Avatar, Panel, SeverityBadge, StatusDot, severityStyles } from "@/components/workradar/primitives";
-import { PriorityCard, sourceIcon, type ItemState } from "@/components/workradar/PriorityCard";
+import { PriorityCard, sourceIcon } from "@/components/workradar/PriorityCard";
+import { useWorkStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +26,9 @@ function Dashboard() {
   const [briefIdx, setBriefIdx] = useState(0);
   const [generatedAt, setGeneratedAt] = useState("8:42 AM");
   const [spinning, setSpinning] = useState(false);
-  const [states, setStates] = useState<Record<string, ItemState>>({});
+  const { items } = useWorkStore();
+  const active = items.filter((i) => !i.done && !i.snoozed);
+  const liveMetrics = metrics.map((m, idx) => (idx === 0 ? { ...m, value: String(active.length), delta: `${active.filter((i) => i.severity === "critical").length} critical` } : m));
   const brief = briefs[briefIdx]!;
 
   const regenerate = () => {
@@ -85,7 +88,7 @@ function Dashboard() {
       </Panel>
 
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {metrics.map((m) => (
+        {liveMetrics.map((m) => (
           <Panel key={m.label} className="px-4 py-3.5">
             <p className="text-xs font-medium text-muted-foreground">{m.label}</p>
             <div className="mt-1 flex items-baseline gap-2">
@@ -99,12 +102,10 @@ function Dashboard() {
       <div className="mt-6 grid gap-6 xl:grid-cols-3">
         <Panel className="xl:col-span-2">
           <div className="flex items-center justify-between border-b px-5 py-4">
-            <h2 className="font-semibold">Top Priorities <span className="font-normal text-muted-foreground">· {workItems.length} items</span></h2>
+            <h2 className="font-semibold">Top Priorities <span className="font-normal text-muted-foreground">· {active.length} active</span></h2>
             <span className="text-xs text-muted-foreground">Sorted by downstream urgency</span>
           </div>
-          {workItems.map((i) => (
-            <PriorityCard key={i.id} item={i} state={states[i.id] ?? {}} onChange={(s) => setStates((p) => ({ ...p, [i.id]: s }))} />
-          ))}
+          {items.map((i) => <PriorityCard key={i.id} item={i} showLatest={false} />)}
         </Panel>
 
         <div className="space-y-6">

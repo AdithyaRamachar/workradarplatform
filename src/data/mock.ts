@@ -17,7 +17,12 @@ export const people = {
   daniel: p("daniel", "Daniel Kim", "Database Eng"),
   sofia: p("sofia", "Sofia Chen", "QA Lead"),
   priyaS: p("priya-shah", "Priya Shah", "Technical Account Manager"),
+  marcus: p("marcus", "Marcus Vance", "Senior Backend Lead"),
+  lena: p("lena", "Lena Ortiz", "Site Reliability Eng"),
+  omar: p("omar", "Omar Haddad", "Database Administrator"),
 };
+export const team: Person[] = Object.values(people);
+export const getPerson = (id: string) => team.find((x) => x.id === id);
 
 export const sources: Source[] = [
   { id: "jira", name: "Jira", status: "connected", lastSync: "8m ago" },
@@ -32,35 +37,35 @@ export const urgencySeverity: Record<Urgency, Severity> = {
 
 export const workItems: WorkItem[] = [
   {
-    id: "gh-1428", rank: 1, title: "Production API fix awaiting review", source: "github", sourceRef: "GitHub PR #1428",
+    id: "gh-1428", latest: "Marcus Vance requested review 1h ago · no comment yet", waitingHours: 18, updatedMinutes: 60, rank: 1, title: "Production API fix awaiting review", source: "github", sourceRef: "GitHub PR #1428",
     owner: people.arjun, status: "Review pending", urgency: "Critical", severity: "critical", timing: "18h pending",
     team: "Platform", updatedAt: "1h ago", tags: ["review", "release"],
     summary: "Hotfix for auth token refresh on the public API is waiting on senior backend review.",
     rationale: "Waiting 18h for senior review; the v2.4.1 release depends on this patch and blocks auth smoke tests.",
   },
   {
-    id: "pay-482", rank: 2, title: "Payment webhook retry issue", source: "jira", sourceRef: "Jira PAY-482",
+    id: "pay-482", latest: "Moved from Backlog to In Progress 25m ago", waitingHours: 24, updatedMinutes: 25, rank: 2, title: "Payment webhook retry issue", source: "jira", sourceRef: "Jira PAY-482",
     owner: people.neha, status: "In Progress", urgency: "High", severity: "warning", timing: "Overdue by 1d",
     team: "Payments", updatedAt: "25m ago", tags: ["overdue", "payments"],
     summary: "Failed webhook deliveries are not retried with backoff, causing dropped payment events.",
     rationale: "Overdue by a day; #payments-dev confirms checkout depends directly on this retry logic.",
   },
   {
-    id: "slack-eng-db", rank: 3, title: "Database migration approval", source: "slack", sourceRef: "Slack #eng-db",
+    id: "slack-eng-db", latest: "Reminder sent to @dba-oncall 3h ago", waitingHours: 22, updatedMinutes: 180, rank: 3, title: "Database migration approval", source: "slack", sourceRef: "Slack #eng-db",
     owner: people.daniel, status: "Blocked", urgency: "Blocker", severity: "critical", timing: "Blocked 22h",
     team: "Data", updatedAt: "4h ago", tags: ["blocked", "migration"],
     summary: "Partition migration for the events table needs DBA sign-off before staging.",
     rationale: "Partition script passed dry run but still awaits central DBA approval before the staging rollout.",
   },
   {
-    id: "plat-216", rank: 4, title: "Release regression tests outstanding", source: "jira", sourceRef: "Jira PLAT-216",
+    id: "plat-216", latest: "Regression run reached 42% 3h ago", waitingHours: 6, updatedMinutes: 180, rank: 4, title: "Release regression tests outstanding", source: "jira", sourceRef: "Jira PLAT-216",
     owner: people.sofia, status: "In Progress", urgency: "Medium", severity: "info", timing: "Due in 2d",
     team: "QA", updatedAt: "3h ago", tags: ["release", "testing"],
     summary: "Core regression suite for the v2.4.1 release candidate is 42% complete.",
     rationale: "RC cut is in 48h and regression is only 42% done due to slow staging environments.",
   },
   {
-    id: "gmail-webhook-escalation", rank: 5, title: "Customer escalation: webhook failures", source: "gmail", sourceRef: "Gmail thread",
+    id: "gmail-webhook-escalation", latest: "Customer replied with new 504 logs 2h ago", waitingHours: 2, updatedMinutes: 120, rank: 5, title: "Customer escalation: webhook failures", source: "gmail", sourceRef: "Gmail thread",
     owner: people.priyaS, status: "Needs attention", urgency: "Escalation", severity: "warning", timing: "2h ago",
     team: "Customer Success", updatedAt: "2h ago", tags: ["customer", "webhooks"],
     summary: "Tier-1 enterprise account reports intermittent 504s on outbound webhooks.",
