@@ -132,8 +132,8 @@ function ItemDetails() {
         <div className="space-y-6 lg:col-span-2">
           <Panel className="p-6">
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1 font-medium"><SIcon className="h-3.5 w-3.5" /> {sourceName[item.source]}</span>·
-              <span>{item.sourceRef}</span>
+              <span className="inline-flex items-center gap-1 font-medium"><SIcon className="h-3.5 w-3.5" /> {item.sourceRef}</span>
+
             </div>
             <h1 className={cn("mt-2 text-2xl font-semibold tracking-tight", item.done && "text-muted-foreground line-through")}>{item.title}</h1>
             <p className="mt-1 text-muted-foreground">{item.summary}</p>
