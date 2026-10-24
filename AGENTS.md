@@ -15,3 +15,4 @@
 - WorkRadar is a frontend-only prototype: data comes from `src/data/mock.ts` with typed models in `src/lib/types.ts`; no backend, auth, or env vars (per brief).
 - The app shell (sidebar + top bar) lives in `src/components/workradar/AppShell.tsx` and wraps `<Outlet />` in `__root.tsx`; routing uses TanStack Router (fixed by the stack).
 - Item triage state (assignee, done, snooze) lives in `src/lib/store.tsx` (React context, persisted to localStorage, loaded in useEffect); all routes read items via `useWorkStore()` so changes show everywhere.
+- Per-item detail content (evidence, timeline, related, metadata, exposure) lives in `src/data/itemDetails.ts`, keyed by item id; AI text and source observations are labelled separately in the UI.

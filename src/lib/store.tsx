@@ -8,6 +8,7 @@ export interface ItemOverride {
   done?: boolean | undefined;
   snoozedUntil?: number | undefined;
   snoozeLabel?: string | undefined;
+  feedback?: "up" | "down" | undefined;
 }
 
 export interface ResolvedItem extends WorkItem {
@@ -17,6 +18,7 @@ export interface ResolvedItem extends WorkItem {
   snoozedUntil?: number | undefined;
   snoozeLabel?: string | undefined;
   displayStatus: string;
+  feedback?: "up" | "down" | undefined;
 }
 
 const KEY = "workradar:item-state:v1";
@@ -30,6 +32,7 @@ export function resolveItem(item: WorkItem, o: ItemOverride = {}, now = 0): Reso
     snoozed,
     snoozedUntil: snoozed ? o.snoozedUntil : undefined,
     snoozeLabel: snoozed ? o.snoozeLabel : undefined,
+    feedback: o.feedback,
     displayStatus: o.done ? "Resolved" : snoozed ? "Snoozed" : item.status,
   };
 }
@@ -51,6 +54,8 @@ interface Store {
   setDone: (id: string, done: boolean) => void;
   snooze: (id: string, until: number, label: string) => void;
   unsnooze: (id: string) => void;
+  setFeedback: (id: string, f: "up" | "down" | undefined) => void;
+  hydrated: boolean;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -86,6 +91,8 @@ export function WorkStoreProvider({ children }: { children: ReactNode }) {
       assign: (id, personId) => patch(id, { assigneeId: personId }),
       setDone: (id, done) => patch(id, { done }),
       snooze: (id, until, label) => patch(id, { snoozedUntil: until, snoozeLabel: label }),
+      setFeedback: (id, f) => patch(id, { feedback: f }),
+      hydrated: now > 0,
       unsnooze: (id) => patch(id, { snoozedUntil: undefined, snoozeLabel: undefined }),
     };
   }, [overrides, now, patch]);
