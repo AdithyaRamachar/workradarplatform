@@ -120,13 +120,18 @@ export function DoneButton({ item }: { item: ResolvedItem }) {
   );
 }
 
-function Feedback() {
-  const [v, setV] = useState<"up" | "down" | null>(null);
-  const give = (x: "up" | "down") => { setV(x); toast("Thanks — feedback noted for ranking"); };
+export function Feedback({ item }: { item: ResolvedItem }) {
+  const { setFeedback } = useWorkStore();
+  const v = item.feedback;
+  const give = (x: "up" | "down") => {
+    const next = v === x ? undefined : x;
+    setFeedback(item.id, next);
+    if (next) toast("Thanks — feedback saved locally to tune this prototype's ranking");
+  };
   return (
     <div className="flex">
-      <Button size="icon" variant="ghost" aria-label="Good ranking" className={cn(v === "up" && "text-primary")} onClick={() => give("up")}><ThumbsUp /></Button>
-      <Button size="icon" variant="ghost" aria-label="Bad ranking" className={cn(v === "down" && "text-critical")} onClick={() => give("down")}><ThumbsDown /></Button>
+      <Button size="icon" variant="ghost" aria-label="Ranking is right" aria-pressed={v === "up"} className={cn(v === "up" && "text-primary")} onClick={() => give("up")}><ThumbsUp /></Button>
+      <Button size="icon" variant="ghost" aria-label="Ranking is wrong" aria-pressed={v === "down"} className={cn(v === "down" && "text-critical")} onClick={() => give("down")}><ThumbsDown /></Button>
     </div>
   );
 }
@@ -172,7 +177,7 @@ export function PriorityCard({ item, showLatest = true }: { item: ResolvedItem; 
             <AssignPicker item={item} />
             <SnoozeMenu item={item} />
             <DoneButton item={item} />
-            <Feedback />
+            <Feedback item={item} />
             <Button size="sm" variant="ghost" asChild className="ml-auto text-primary">
               <Link to="/items/$id" params={{ id: item.id }}>View Details <ArrowUpRight /></Link>
             </Button>
