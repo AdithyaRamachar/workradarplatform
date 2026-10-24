@@ -37,13 +37,13 @@ function ItemDetails() {
       <div className="grid gap-6 lg:grid-cols-3">
         <Panel className="p-6 lg:col-span-2">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <SeverityBadge severity={item.severity} /> {item.id} · <span className="capitalize">{item.source}</span>
+            <SeverityBadge severity={item.severity} /> {item.sourceRef} · {item.status} · {item.timing}
           </div>
           <h1 className="mt-3 text-2xl font-semibold tracking-tight">{item.title}</h1>
           <p className="mt-2 text-muted-foreground">{item.summary}</p>
           <div className="mt-6 rounded-lg border bg-primary-soft p-4">
-            <p className="flex items-center gap-2 text-sm font-semibold text-accent-foreground"><Sparkles className="h-4 w-4" /> AI insight</p>
-            <p className="mt-2 text-sm">{item.aiInsight}</p>
+            <p className="flex items-center gap-2 text-sm font-semibold text-accent-foreground"><Sparkles className="h-4 w-4" /> Why this matters</p>
+            <p className="mt-2 text-sm">{item.rationale}</p>
           </div>
           <div className="mt-6 flex gap-2">
             <Button>Take action</Button>

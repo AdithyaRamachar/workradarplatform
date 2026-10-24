@@ -1,95 +1,116 @@
-import type { Metric, Person, Source, WorkItem, Workspace } from "@/lib/types";
+import type { Activity, BlockedPerson, Brief, Metric, Person, Source, Urgency, Severity, WorkItem, Workspace } from "@/lib/types";
 
 export const workspaces: Workspace[] = [
   { id: "platform", name: "Platform Engineering" },
-  { id: "mobile", name: "Mobile Apps" },
+  { id: "payments", name: "Payments" },
   { id: "data", name: "Data Infrastructure" },
 ];
 
-export const currentUser: Person = { id: "u0", name: "Priya Nair", initials: "PN", role: "Engineering Manager" };
+export const currentUser: Person = { id: "u0", name: "Priya Sharma", initials: "PS", role: "Director of Engineering" };
 
-const people: [Person, Person, Person] = [
-  { id: "u1", name: "Marcus Lee", initials: "ML", role: "Senior Engineer" },
-  { id: "u2", name: "Sofia Alvarez", initials: "SA", role: "Staff Engineer" },
-  { id: "u3", name: "Dev Patel", initials: "DP", role: "Engineer II" },
-];
+const p = (id: string, name: string, role: string): Person => ({
+  id, name, role, initials: name.split(" ").map((w) => w[0]).join("").slice(0, 2),
+});
+export const people = {
+  arjun: p("arjun", "Arjun Mehta", "Senior Frontend Eng"),
+  neha: p("neha", "Neha Rao", "Backend Eng"),
+  daniel: p("daniel", "Daniel Kim", "Database Eng"),
+  sofia: p("sofia", "Sofia Chen", "QA Lead"),
+  priyaS: p("priya-shah", "Priya Shah", "Technical Account Manager"),
+};
 
 export const sources: Source[] = [
-  { id: "github", name: "GitHub", status: "connected" },
-  { id: "jira", name: "Jira", status: "syncing" },
-  { id: "slack", name: "Slack", status: "connected" },
-  { id: "pagerduty", name: "PagerDuty", status: "error" },
+  { id: "jira", name: "Jira", status: "connected", lastSync: "8m ago" },
+  { id: "github", name: "GitHub", status: "connected", lastSync: "5m ago" },
+  { id: "slack", name: "Slack", status: "connected", lastSync: "3m ago" },
+  { id: "gmail", name: "Gmail", status: "syncing", lastSync: "12m ago" },
 ];
 
-export const metrics: Metric[] = [
-  { label: "Critical items", value: "3", delta: "+1 since yesterday", severity: "critical" },
-  { label: "Blocked PRs", value: "7", delta: "-2 this week", severity: "warning" },
-  { label: "Sprint progress", value: "68%", delta: "On track", severity: "success" },
-  { label: "Open incidents", value: "1", delta: "P2 · 3h open", severity: "info" },
-];
+export const urgencySeverity: Record<Urgency, Severity> = {
+  Critical: "critical", Blocker: "critical", High: "warning", Escalation: "warning", Medium: "info",
+};
 
 export const workItems: WorkItem[] = [
   {
-    id: "WR-101",
-    title: "Payments API latency regression after v2.14 deploy",
-    summary: "p95 latency up 340ms on /checkout since last night's release.",
-    severity: "critical",
-    source: "pagerduty",
-    team: "Payments",
-    owner: people[0],
-    updatedAt: "12 min ago",
-    tags: ["incident", "release"],
-    aiInsight: "Correlates with PR #4821 introducing a synchronous fraud check. Consider rollback or feature flag.",
+    id: "gh-1428", rank: 1, title: "Production API fix awaiting review", source: "github", sourceRef: "GitHub PR #1428",
+    owner: people.arjun, status: "Review pending", urgency: "Critical", severity: "critical", timing: "18h pending",
+    team: "Platform", updatedAt: "1h ago", tags: ["review", "release"],
+    summary: "Hotfix for auth token refresh on the public API is waiting on senior backend review.",
+    rationale: "Waiting 18h for senior review; the v2.4.1 release depends on this patch and blocks auth smoke tests.",
   },
   {
-    id: "WR-102",
-    title: "Auth service migration PR blocked on review for 4 days",
-    summary: "PR #4790 has 2 pending reviewers and failing integration tests.",
-    severity: "warning",
-    source: "github",
-    team: "Identity",
-    owner: people[1],
-    updatedAt: "1 h ago",
-    tags: ["review", "blocked"],
-    aiInsight: "Sofia is the only approver with context; reassigning one review could unblock Thursday's milestone.",
+    id: "pay-482", rank: 2, title: "Payment webhook retry issue", source: "jira", sourceRef: "Jira PAY-482",
+    owner: people.neha, status: "In Progress", urgency: "High", severity: "warning", timing: "Overdue by 1d",
+    team: "Payments", updatedAt: "25m ago", tags: ["overdue", "payments"],
+    summary: "Failed webhook deliveries are not retried with backoff, causing dropped payment events.",
+    rationale: "Overdue by a day; #payments-dev confirms checkout depends directly on this retry logic.",
   },
   {
-    id: "WR-103",
-    title: "Sprint 42 scope creep: 9 tickets added mid-sprint",
-    summary: "Velocity forecast dropped from 48 to 39 points.",
-    severity: "warning",
-    source: "jira",
-    team: "Platform",
-    owner: people[2],
-    updatedAt: "3 h ago",
-    tags: ["planning"],
-    aiInsight: "Five of the added tickets are low priority and could move to Sprint 43.",
+    id: "slack-eng-db", rank: 3, title: "Database migration approval", source: "slack", sourceRef: "Slack #eng-db",
+    owner: people.daniel, status: "Blocked", urgency: "Blocker", severity: "critical", timing: "Blocked 22h",
+    team: "Data", updatedAt: "4h ago", tags: ["blocked", "migration"],
+    summary: "Partition migration for the events table needs DBA sign-off before staging.",
+    rationale: "Partition script passed dry run but still awaits central DBA approval before the staging rollout.",
   },
   {
-    id: "WR-104",
-    title: "Team raised concern about on-call load in #eng-platform",
-    summary: "Three engineers mentioned burnout in the last week.",
-    severity: "info",
-    source: "slack",
-    team: "Platform",
-    owner: people[0],
-    updatedAt: "Yesterday",
-    tags: ["team-health"],
-    aiInsight: "On-call pages up 2.3x month over month. Worth discussing in your next 1:1s.",
+    id: "plat-216", rank: 4, title: "Release regression tests outstanding", source: "jira", sourceRef: "Jira PLAT-216",
+    owner: people.sofia, status: "In Progress", urgency: "Medium", severity: "info", timing: "Due in 2d",
+    team: "QA", updatedAt: "3h ago", tags: ["release", "testing"],
+    summary: "Core regression suite for the v2.4.1 release candidate is 42% complete.",
+    rationale: "RC cut is in 48h and regression is only 42% done due to slow staging environments.",
   },
   {
-    id: "WR-105",
-    title: "Search indexing pipeline shipped to production",
-    summary: "Rollout completed with zero errors across all regions.",
-    severity: "success",
-    source: "github",
-    team: "Data",
-    owner: people[1],
-    updatedAt: "Yesterday",
-    tags: ["release"],
-    aiInsight: "Good candidate for a team shout-out in Friday's update.",
+    id: "gmail-webhook-escalation", rank: 5, title: "Customer escalation: webhook failures", source: "gmail", sourceRef: "Gmail thread",
+    owner: people.priyaS, status: "Needs attention", urgency: "Escalation", severity: "warning", timing: "2h ago",
+    team: "Customer Success", updatedAt: "2h ago", tags: ["customer", "webhooks"],
+    summary: "Tier-1 enterprise account reports intermittent 504s on outbound webhooks.",
+    rationale: "Tier-1 account sees 504 timeouts affecting invoice delivery; likely linked to PAY-482.",
   },
 ];
 
+export const briefs: Brief[] = [
+  {
+    summary: "Today's release is at risk due to a pending production API review and a blocked database migration. Resolve the review dependency first, then confirm database approval before the staging rollout.",
+    blockers: "PR #1428 (18h) and DB migration (22h)",
+    changes: "PAY-482 in progress; 1 customer escalation",
+    nextActions: "Unblock Arjun and verify the DBA script",
+    evidence: ["GitHub PR #1428 · no reviewer activity for 18h", "Slack #eng-db · DBA approval requested yesterday 10:14", "Jira PAY-482 · due date passed 1d ago"],
+  },
+  {
+    summary: "Payments reliability is the main customer-facing risk. The webhook retry fix (PAY-482) is overdue and a Tier-1 customer has escalated timeouts; pairing Neha with a reviewer today would close both.",
+    blockers: "PAY-482 overdue and DB migration (22h)",
+    changes: "Escalation email received; CI passed on partition script",
+    nextActions: "Pair-review PAY-482 and reply to the customer",
+    evidence: ["Gmail · Tier-1 escalation received 2h ago", "Slack #payments-dev · checkout depends on retry logic", "CI · partition script dry run passed 4h ago"],
+  },
+  {
+    summary: "The v2.4.1 release candidate cut is in 48h. Regression coverage sits at 42% and two items block the critical path; consider moving the cut by one day if the DBA approval does not land by noon.",
+    blockers: "Regression at 42% and DB approval pending",
+    changes: "New reviewer pinged on PR #1428",
+    nextActions: "Decide on RC cut timing by noon",
+    evidence: ["Jira PLAT-216 · 42% of regression suite complete", "GitHub · @marcus-db requested on PR #1428", "Slack #eng-db · awaiting central DBA team"],
+  },
+];
+
+export const metrics: Metric[] = [
+  { label: "Priority Items", value: "5", delta: "2 critical", severity: "critical" },
+  { label: "Active Blockers", value: "3", delta: "Longest 22h", severity: "warning" },
+  { label: "Overdue Tickets", value: "1", delta: "PAY-482 · 1d", severity: "warning" },
+  { label: "Stale Review", value: "1", delta: "PR #1428 · 18h", severity: "info" },
+];
+
+export const blockedPeople: BlockedPerson[] = [
+  { person: people.arjun, duration: "18h blocked", waitingOn: "Code review from senior backend lead", ref: "#1428" },
+  { person: people.neha, duration: "1d blocked", waitingOn: "DB schema verification and access token", ref: "PAY-482" },
+  { person: people.sofia, duration: "6h blocked", waitingOn: "Staging cluster release deployment", ref: "PLAT-216" },
+];
+
+export const recentActivity: Activity[] = [
+  { id: "a1", title: "PAY-482 moved to In Progress", detail: "Retry logic unblocked after PR #310 merged.", time: "25m ago", severity: "info" },
+  { id: "a2", title: "Review requested", detail: "@marcus-db pinged on PR #1428.", time: "1h ago", severity: "warning" },
+  { id: "a3", title: "Customer escalation", detail: "Tier-1 customer email about timeout errors.", time: "2h ago", severity: "critical" },
+  { id: "a4", title: "CI tests passed", detail: "DB partition script passed dry run on test cluster.", time: "4h ago", severity: "success" },
+];
+
 export const getItem = (id: string) => workItems.find((i) => i.id === id);
-export const lastUpdated = "2 min ago";
+export const lastUpdated = "8 min ago";

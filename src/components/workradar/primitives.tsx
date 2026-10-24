@@ -69,7 +69,7 @@ export function ItemRow({ item }: { item: WorkItem }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <SeverityBadge severity={item.severity} />
-          <span>{item.id}</span>·<span className="capitalize">{item.source}</span>·<span>{item.team}</span>
+          <span>#{item.rank}</span>·<span>{item.sourceRef}</span>·<span>{item.owner.name}</span>·<span>{item.status}</span>
         </div>
         <p className="mt-1.5 font-medium text-foreground">{item.title}</p>
         <p className="mt-0.5 text-sm text-muted-foreground">{item.summary}</p>
