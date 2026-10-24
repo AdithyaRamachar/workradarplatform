@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SearchX, Search as SearchIcon } from "lucide-react";
-import { workItems } from "@/data/mock";
+import { useWorkStore } from "@/lib/store";
 import { EmptyState, ItemRow, PageHeader, Panel } from "@/components/workradar/primitives";
 
 export const Route = createFileRoute("/search")({
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/search")({
 
 function SearchPage() {
   const [q, setQ] = useState("");
+  const workItems = useWorkStore().items.map((i) => ({ ...i, owner: i.assignee, status: i.displayStatus }));
   const term = q.trim().toLowerCase();
   const results = term ? workItems.filter((i) => `${i.title} ${i.summary} ${i.team} ${i.tags.join(" ")}`.toLowerCase().includes(term)) : [];
   return (

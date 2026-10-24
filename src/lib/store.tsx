@@ -4,18 +4,18 @@ import type { Person, WorkItem } from "@/lib/types";
 
 /** Local-only overrides layered on top of mock work items. Never synced anywhere. */
 export interface ItemOverride {
-  assigneeId?: string;
-  done?: boolean;
-  snoozedUntil?: number;
-  snoozeLabel?: string;
+  assigneeId?: string | undefined;
+  done?: boolean | undefined;
+  snoozedUntil?: number | undefined;
+  snoozeLabel?: string | undefined;
 }
 
 export interface ResolvedItem extends WorkItem {
   assignee: Person;
   done: boolean;
   snoozed: boolean;
-  snoozedUntil?: number;
-  snoozeLabel?: string;
+  snoozedUntil?: number | undefined;
+  snoozeLabel?: string | undefined;
   displayStatus: string;
 }
 
