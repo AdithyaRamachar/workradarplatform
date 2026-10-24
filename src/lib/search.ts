@@ -34,5 +34,6 @@ export function highlightParts(text: string, query: string): { text: string; mat
   const terms = query.trim().split(/\s+/).filter(Boolean).map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   if (!terms.length) return [{ text, match: false }];
   const re = new RegExp(`(${terms.join("|")})`, "gi");
-  return text.split(re).filter(Boolean).map((p) => ({ text: p, match: re.test(p) && ((re.lastIndex = 0), true) }));
+  const exact = new RegExp(`^(${terms.join("|")})$`, "i");
+  return text.split(re).filter(Boolean).map((p) => ({ text: p, match: exact.test(p) }));
 }
